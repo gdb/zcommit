@@ -68,16 +68,26 @@ class Application(object):
                 logger.debug('Set zsig')
                 for c in reversed(payload['commits']):
                     inst = opts.get('instance', c['id'][:8])
+                    actions = []
+                    if c.get('added'):
+                        actions.append('Added: %s\n' % c['added'])
+                    if c.get('removed'):
+                        actions.append('Removed: %s\n' % c['removed'])
+                    if c.get('modified'):
+                        actions.append('Modified: %s\n' % c['modified'])
+                    if not actions:
+                        actions = 'Something weird happened... could not figure out what action to take'
                     info = {'name' : c['author']['name'],
                             'email' : c['author']['email'],
                             'message' : c['message'],
                             'timestamp' : c['timestamp'],
-                            'added' :  '\n'.join(c['added'])}
+                            'actions' : actions}
+                    
                     msg = """%(name)s <%(email)s>
 %(message)s
 %(timestamp)s
 --
-%(added)s""" % info
+%(actions)s""" % info
                     zephyr(opts['class'], inst, zsig, msg)
                 msg = 'Thanks for posting!'
             else:
