@@ -4,10 +4,13 @@ import cherrypy
 from flup.server.fcgi import WSGIServer
 import logging
 import json
+import os
 import subprocess
 import sys
 import traceback
 
+HERE = os.path.dirname(__file__)
+os.environ['KRBTKFILE'] = os.path.join(HERE, 'tkt')
 LOG_FILENAME = 'logs/zcommit.log'
 
 # Set up a specific logger with our desired output level
