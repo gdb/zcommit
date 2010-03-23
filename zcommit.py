@@ -76,7 +76,7 @@ class Application(object):
                     if c.get('modified'):
                         actions.append('Modified: %s\n' % ', '.join(c['modified']))
                     if not actions:
-                        actions = 'Something weird happened... could not figure out what action to take'
+                        actions.append('Something weird happened... could not figure out what action to take')
                     info = {'name' : c['author']['name'],
                             'email' : c['author']['email'],
                             'message' : c['message'],
