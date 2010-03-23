@@ -10,7 +10,7 @@ import sys
 import traceback
 
 HERE = os.path.dirname(__file__)
-os.environ['KRBTKFILE'] = os.path.join(HERE, 'tkt')
+ZWRITE = os.path.join(HERE, 'bin', 'zsend')
 LOG_FILENAME = 'logs/zcommit.log'
 
 # Set up a specific logger with our desired output level
@@ -21,15 +21,19 @@ logger.setLevel(logging.DEBUG)
 handler = logging.FileHandler(LOG_FILENAME)
 logger.addHandler(handler)
 
-def zephyr(klass, instance, zsig, msg):
+def zephyr(sender, klass, instance, zsig, msg):
     # TODO: spoof the sender
     logger.info("""About to send zephyr:
+sender: %(sender)s
 class: %(klass)s
 instance: %(instance)s
 zsig: %(zsig)s
-msg: %(msg)s""" % {'klass' : klass, 'instance' : instance,
-                 'zsig' : zsig, 'msg' : msg})
-    cmd = ['zwrite', '-c', klass, '-i', instance,
+msg: %(msg)s""" % {'sender' : sender,
+                   'klass' : klass,
+                   'instance' : instance,
+                   'zsig' : zsig,
+                   'msg' : msg})
+    cmd = [ZWRITE, '-S', sender, '-c', klass, '-i', instance,
            '-s', zsig, '-d', '-m', msg]
     subprocess.check_call(cmd)
 
@@ -68,6 +72,7 @@ class Application(object):
                 zsig = payload['ref']
                 if 'zsig' in opts:
                     zsig = '%s: %s' % (opts['zsig'], zsig)
+                sender = opts.get('sender', 'daemon.zcommit')
                 logger.debug('Set zsig')
                 for c in reversed(payload['commits']):
                     inst = opts.get('instance', c['id'][:8])
@@ -84,14 +89,14 @@ class Application(object):
                             'email' : c['author']['email'],
                             'message' : c['message'],
                             'timestamp' : c['timestamp'],
-                            'actions' : '\n--\n'.join(actions)}
+                            'actions' : '--\n'.join(actions)}
                     
                     msg = """%(name)s <%(email)s>
 %(message)s
 %(timestamp)s
 --
 %(actions)s""" % info
-                    zephyr(opts['class'], inst, zsig, msg)
+                    zephyr(sender, opts['class'], inst, zsig, msg)
                 msg = 'Thanks for posting!'
             else:
                 msg = ('If you had sent a POST request to this URL, would have sent'
