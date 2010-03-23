@@ -91,9 +91,8 @@ class Application(object):
                             'timestamp' : c['timestamp'],
                             'actions' : '--\n'.join(actions)}
                     
-                    msg = """%(name)s <%(email)s>
-%(message)s
-%(timestamp)s
+                    msg = """%(name)s <%(email)s> (%(timestamp)s)
+> %(message)s
 --
 %(actions)s""" % info
                     zephyr(sender, opts['class'], inst, zsig, msg)
