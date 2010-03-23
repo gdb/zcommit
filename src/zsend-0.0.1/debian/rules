@@ -1,0 +1,90 @@
+#!/usr/bin/make -f
+# Sample debian/rules that uses debhelper. 
+# GNU copyright 1997 by Joey Hess.
+#
+# This version is for a hypothetical package that builds an
+# architecture-dependant package, as well as an architecture-independent
+# package.
+
+# Uncomment this to turn on verbose mode. 
+#export DH_VERBOSE=1
+
+# This is the debhelper compatability version to use.
+export DH_COMPAT=3
+
+# This has to be exported to make some magic below work.
+export DH_OPTIONS
+SONAME=3
+
+configure: configure-stamp
+configure-stamp:
+	dh_testdir
+
+	# Add here commands to configure the package.
+	-mkdir build-tree
+	cp *.c build-tree/
+	cp *.h build-tree/
+	cp Makefile build-tree/
+
+build: configure-stamp build-stamp
+build-stamp:
+	dh_testdir
+
+	# Add here commands to compile the package.
+	$(MAKE) -C `pwd`/build-tree 
+	touch build-stamp
+
+clean:
+	dh_testdir
+	dh_testroot
+	-rm -f build-stamp configure-stamp
+
+	# Add here commands to clean up after the build process.
+	-rm -rf build-tree debian/tmp
+
+	dh_clean
+
+install: DH_OPTIONS=
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	-rm -rf debian/tmp
+	dh_installdirs
+	mkdir -p debian/tmp/usr/bin/
+
+	# Add here commands to install the package into debian/tmp.
+	cd build-tree&&$(MAKE)  DESTDIR=`pwd`/../debian/tmp install
+
+
+# Build architecture-independent files here.
+# Pass -i to all debhelper commands in this target to reduce clutter.
+binary-indep: build install
+
+
+# Build architecture-dependent files here.
+# Pass -a to all debhelper commands in this target to reduce clutter.
+binary-arch: build install
+	dh_testdir
+	dh_testroot
+	set -e; \
+	dh_movefiles -pzsend
+	dh_movefiles --sourcedir=debian/tmp -pzsend 
+	dh_installdebconf 
+	dh_installdocs
+	dh_installchangelogs 
+	dh_strip
+	dh_compress
+	dh_fixperms
+	dh_makeshlibs
+	dh_shlibdeps
+	dh_installdeb
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary: binary-indep binary-arch
+
+.PHONY: build clean binary-indep binary-arch binary install configure
+
+

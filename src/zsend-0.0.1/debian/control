@@ -1,0 +1,15 @@
+Source: zsend
+Section: net
+Priority: optional
+Maintainer: Aaron Solochek <aarons@aberrant.org>
+Build-Depends: debhelper, bison, libzephyr-dev, libreadline-dev
+Standards-Version: 3.1.1
+
+Package: zsend
+Section: net
+Architecture: any
+Depends: zephyr-clients, ${shlibs:Depends}
+Description: zsend is a stripped zwrite ideal for use in scripts
+ .
+ This package contains the zsend binary for use in zephyr notification
+ scripts.
