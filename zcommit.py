@@ -70,18 +70,18 @@ class Application(object):
                     inst = opts.get('instance', c['id'][:8])
                     actions = []
                     if c.get('added'):
-                        actions.append('Added: %s\n' % c['added'])
+                        actions.append('Added: %s\n' % ', '.join(c['added']))
                     if c.get('removed'):
-                        actions.append('Removed: %s\n' % c['removed'])
+                        actions.append('Removed: %s\n' % ', '.join(c['removed']))
                     if c.get('modified'):
-                        actions.append('Modified: %s\n' % c['modified'])
+                        actions.append('Modified: %s\n' % ', '.join(c['modified']))
                     if not actions:
                         actions = 'Something weird happened... could not figure out what action to take'
                     info = {'name' : c['author']['name'],
                             'email' : c['author']['email'],
                             'message' : c['message'],
                             'timestamp' : c['timestamp'],
-                            'actions' : actions}
+                            'actions' : '\n--\n'.join(actions)}
                     
                     msg = """%(name)s <%(email)s>
 %(message)s
