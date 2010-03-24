@@ -9,7 +9,7 @@ import subprocess
 import sys
 import traceback
 
-HERE = os.path.dirname(__file__)
+HERE = os.path.abspath(os.path.dirname(__file__))
 ZWRITE = os.path.join(HERE, 'bin', 'zsend')
 LOG_FILENAME = 'logs/zcommit.log'
 
@@ -41,7 +41,38 @@ class Application(object):
     @cherrypy.expose
     def index(self):
         logger.debug('Hello world app reached')
-        return 'Hello world!'
+        return """
+<p> <i>Welcome to zcommit.</i> </p>
+
+<p> zcommit allows you to send zephyr notifications by sending an HTTP
+POST request to a URL.  Currently zcommit supports POST-backs from
+github.  If you would like it to support another form of POST-back,
+please let us know (zcommit@mit.edu). </p>
+
+<h1> URL structure </h1>
+
+The URL you post to is structured as follows:
+<tt>http://zcommit.mit.edu/$type/$key1/$value1/$key2/$value2/...</tt>.
+So for example, the URL
+<tt>http://zcommit.mit.edu/github/class/zcommit/instance/commit</tt>
+is parsed as having type <tt>github</tt>, class <tt>zcommit</tt>, and
+instance <tt>commit</tt>.  Using this information, zcommit figures out
+how to form a useful message which is then sends as a zephyr.
+
+<h1> Types </h1>
+
+<h2> Github </h2>
+
+Set your POST-back URL to
+<tt>http://zcommit.mit.edu/github/class/$classname</tt>, followed by
+any of the following optional key/value parameters:
+
+<ul>
+<li> <tt>/instance/$instance</tt> </li>
+<li> <tt>/zsig/$zsig</tt> </li>
+<li> <tt>/sender/$sender</tt> </li>
+</ul>
+"""
 
     class Github(object):
         @cherrypy.expose
@@ -84,14 +115,16 @@ class Application(object):
                     if c.get('modified'):
                         actions.append('Modified: %s\n' % '\n  '.join(c['modified']))
                     if not actions:
-                        actions.append('Something weird happened... could not figure out what action to take')
+                        actions.append('Did not add/remove/modify any nonempty files.')
                     info = {'name' : c['author']['name'],
                             'email' : c['author']['email'],
                             'message' : c['message'],
                             'timestamp' : c['timestamp'],
-                            'actions' : '--\n'.join(actions)}
+                            'actions' : '--\n'.join(actions),
+                            'url' : c['url']}
                     
                     msg = """%(name)s <%(email)s> (%(timestamp)s)
+%(url)s
 > %(message)s
 --
 %(actions)s""" % info

@@ -4,3 +4,5 @@
 *.pyc
 bin/zsend
 logs/zcommit.log
+*.o
+src/zsend-0.0.1/zsend
