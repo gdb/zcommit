@@ -9,7 +9,7 @@ import subprocess
 import sys
 import traceback
 
-HERE = os.path.dirname(__file__)
+HERE = os.path.abspath(os.path.dirname(__file__))
 ZWRITE = os.path.join(HERE, 'bin', 'zsend')
 LOG_FILENAME = 'logs/zcommit.log'
 
