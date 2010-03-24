@@ -59,7 +59,9 @@ is parsed as having type <tt>github</tt>, class <tt>zcommit</tt>, and
 instance <tt>commit</tt>.  Using this information, zcommit figures out
 how to form a useful message which is then sends as a zephyr.
 
-<h1> Github </h1>
+<h1> Types </h1>
+
+<h2> Github </h2>
 
 Set your POST-back URL to
 <tt>http://zcommit.mit.edu/github/class/$classname</tt>, followed by
