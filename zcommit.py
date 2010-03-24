@@ -113,7 +113,7 @@ any of the following optional key/value parameters:
                     if c.get('modified'):
                         actions.append('Modified: %s\n' % '\n  '.join(c['modified']))
                     if not actions:
-                        actions.append('Something weird happened... could not figure out what action to take')
+                        actions.append('Did not add/remove/modify any nonempty files.')
                     info = {'name' : c['author']['name'],
                             'email' : c['author']['email'],
                             'message' : c['message'],
