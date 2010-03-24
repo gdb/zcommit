@@ -120,9 +120,11 @@ any of the following optional key/value parameters:
                             'email' : c['author']['email'],
                             'message' : c['message'],
                             'timestamp' : c['timestamp'],
-                            'actions' : '--\n'.join(actions)}
+                            'actions' : '--\n'.join(actions),
+                            'url' : c['url']}
                     
                     msg = """%(name)s <%(email)s> (%(timestamp)s)
+%(url)s
 > %(message)s
 --
 %(actions)s""" % info
