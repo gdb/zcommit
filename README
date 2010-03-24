@@ -1,0 +1,29 @@
+Welcome to zcommit.
+
+zcommit allows you to send zephyr notifications by sending an HTTP
+POST request to a URL. Currently zcommit supports POST-backs from
+github. If you would like it to support another form of POST-back,
+please let us know (zcommit@mit.edu).
+
+== URL structure ==
+
+The URL you post to is structured as follows:
+http://zcommit.mit.edu/$type/$key1/$value1/$key2/$value2/.... So for
+example, the URL
+http://zcommit.mit.edu/github/class/zcommit/instance/commit is parsed
+as having type github, class zcommit, and instance commit. Using this
+information, zcommit figures out how to form a useful message which is
+then sends as a zephyr.
+
+== Types ==
+
+==== Github ====
+
+Set your POST-back URL to
+http://zcommit.mit.edu/github/class/$classname, followed by any of the
+following optional key/value parameters:
+
+    * /instance/$instance
+    * /zsig/$zsig
+    * /sender/$sender
+
