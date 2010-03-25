@@ -69,7 +69,7 @@ any of the following optional key/value parameters:
 
 <ul>
 <li> <tt>/instance/$instance</tt> </li>
-<li> <tt>/zsig/$zsig</tt> </li>
+<li> <tt>/zsig/$zsig</tt> (sets the prefix of the zsig; the postfix is always the branch name) </li>
 <li> <tt>/sender/$sender</tt> </li>
 </ul>
 """
