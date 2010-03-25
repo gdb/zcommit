@@ -35,7 +35,7 @@ msg: %(msg)s""" % {'sender' : sender,
                    'msg' : msg})
     cmd = [ZWRITE, '-S', sender, '-c', klass, '-i', instance,
            '-s', zsig, '-d', '-m', msg]
-    subprocess.check_call(cmd)
+    subprocess.check_call([str(p) for p in cmd])
 
 class Application(object):
     @cherrypy.expose
