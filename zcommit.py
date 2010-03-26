@@ -105,7 +105,7 @@ any of the following optional key/value parameters:
                     zsig = '%s: %s' % (opts['zsig'], zsig)
                 sender = opts.get('sender', 'daemon.zcommit')
                 logger.debug('Set zsig')
-                for c in reversed(payload['commits']):
+                for c in payload['commits']:
                     inst = opts.get('instance', c['id'][:8])
                     actions = []
                     if c.get('added'):
