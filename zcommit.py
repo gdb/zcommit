@@ -8,6 +8,7 @@ import os
 import subprocess
 import sys
 import traceback
+import dateutil.parser
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 ZWRITE = os.path.join(HERE, 'bin', 'zsend')
@@ -109,24 +110,26 @@ any of the following optional key/value parameters:
                     inst = opts.get('instance', c['id'][:8])
                     actions = []
                     if c.get('added'):
-                        actions.append('Added: %s\n' % '\n  '.join(c['added']))
+                        actions.extend('  A %s\n' % f for f in c['added'])
                     if c.get('removed'):
-                        actions.append('Removed: %s\n' % '\n  '.join(c['removed']))
+                        actions.extend('  D %s\n' % f for f in c['removed'])
                     if c.get('modified'):
-                        actions.append('Modified: %s\n' % '\n  '.join(c['modified']))
+                        actions.extend('  M %s\n' % f for f in c['modified'])
                     if not actions:
                         actions.append('Did not add/remove/modify any nonempty files.')
                     info = {'name' : c['author']['name'],
                             'email' : c['author']['email'],
                             'message' : c['message'],
-                            'timestamp' : c['timestamp'],
-                            'actions' : '--\n'.join(actions),
+                            'timestamp' : dateutil.parser.parse(c['timestamp']).strftime('%F %T %z'),
+                            'actions' : ''.join(actions),
                             'url' : c['url']}
                     
-                    msg = """%(name)s <%(email)s> (%(timestamp)s)
-%(url)s
-> %(message)s
---
+                    msg = """%(url)s
+Author: %(name)s <%(email)s>
+Date:   %(timestamp)s
+
+%(message)s
+---
 %(actions)s""" % info
                     zephyr(sender, opts['class'], inst, zsig, msg)
                 msg = 'Thanks for posting!'
