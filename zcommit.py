@@ -35,7 +35,7 @@ msg: %(msg)s""" % {'sender' : sender,
                    'msg' : msg})
     cmd = [ZWRITE, '-S', sender, '-c', klass, '-i', instance,
            '-s', zsig, '-d', '-m', msg]
-    subprocess.check_call([str(p) for p in cmd])
+    subprocess.check_call([p.encode('utf-8') for p in cmd])
 
 class Application(object):
     @cherrypy.expose
@@ -91,7 +91,7 @@ any of the following optional key/value parameters:
                 raise cherrypy.HTTPError(400, 'Invalid submission URL')
             logger.debug('Passed validation')
             for i in xrange(0, len(args), 2):
-                opts[args[i]] = args[i + 1]
+                opts[args[i]] = unicode(args[i + 1], 'utf-8', 'replace')
             logger.debug('Set opts')
             if 'class' not in opts:
                 raise cherrypy.HTTPError(400, 'Must specify a zephyr class name')
