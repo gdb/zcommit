@@ -1,4 +1,4 @@
 RewriteEngine on
 
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^(.*)$ zcommit.py/$1 [QSA,L]
+RewriteRule ^(.*)$ zcommit.py/$1 [L]
