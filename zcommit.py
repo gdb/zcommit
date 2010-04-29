@@ -139,6 +139,42 @@ Date:   %(timestamp)s
             return msg
 
     github = Github()
+    
+    class Default(object):
+        @cherrypy.expose
+        def default(self, *args, **query):
+            try:
+                return self._default(*args, **query)
+            except Exception, e:
+                logger.error('Caught exception %s:\n%s' % (e, traceback.format_exc()))
+                raise
+
+        def _default(self, *args, **query):
+            logger.info('A %s request with args: %r and query: %r' %
+                        (cherrypy.request.method, args, query))
+            opts = {}
+            if len(args) % 2:
+                raise cherrypy.HTTPError(400, 'Invalid submission URL')
+            logger.debug('Passed validation')
+            for i in xrange(0, len(args), 2):
+                opts[args[i]] = unicode(args[i + 1], 'utf-8', 'replace')
+            logger.debug('Set opts')
+            if 'class' not in opts or 'instance' not in opts:
+                raise cherrypy.HTTPError(400, 'Must specify a zephyr class and instance')
+            logger.debug('Specified a class')
+            if cherrypy.request.method == 'POST':
+                logger.debug('About to load data')
+                zsig = opts.get('zsig', 'zcommit')
+                sender = opts.get('sender', 'daemon.zcommit')
+                logger.debug('Set zsig')
+                zephyr(sender, opts['class'], opts['instance'], zsig, query['payload'])
+                msg = 'Thanks for posting!'
+            else:
+                msg = ('If you had sent a POST request to this URL, would have sent'
+                       ' a zepyhr to -c %s' % opts['class'])
+            return msg
+
+    default = Default()
 
 def main():
     app = cherrypy.tree.mount(Application(), '/zcommit')
