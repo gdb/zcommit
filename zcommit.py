@@ -73,6 +73,11 @@ any of the following optional key/value parameters:
 <li> <tt>/zsig/$zsig</tt> (sets the prefix of the zsig; the postfix is always the branch name) </li>
 <li> <tt>/sender/$sender</tt> </li>
 </ul>
+
+<h2> Default </h2>
+
+Same as github, but with <tt>github</tt> replaced by <tt>default</tt>
+in the URL, and no <tt>sender</tt> parameter.
 """
 
     class Github(object):
@@ -165,7 +170,7 @@ Date:   %(timestamp)s
             if cherrypy.request.method == 'POST':
                 logger.debug('About to load data')
                 zsig = opts.get('zsig', 'zcommit')
-                sender = opts.get('sender', 'daemon.zcommit')
+                sender = 'daemon.zcommit'
                 logger.debug('Set zsig')
                 zephyr(sender, opts['class'], opts['instance'], zsig, query['payload'])
                 msg = 'Thanks for posting!'
