@@ -77,7 +77,8 @@ any of the following optional key/value parameters:
 <h2> Default </h2>
 
 Same as github, but with <tt>github</tt> replaced by <tt>default</tt>
-in the URL, and no <tt>sender</tt> parameter.
+in the URL, and no <tt>sender</tt> parameter. The <tt>payload</tt>
+parameter of the POST should contain the body of the zephyr.
 """
 
     class Github(object):
