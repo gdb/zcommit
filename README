@@ -17,6 +17,8 @@ then sends as a zephyr.
 
 == Types ==
 
+zcommit supports the following zephyr types:
+
 ==== Github ====
 
 This type parses a Github pingback to send a commit zephyr to a class
