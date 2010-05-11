@@ -1,4 +1,4 @@
-Welcome to zcommit.
+Welcome to zcommit!
 
 zcommit allows you to send zephyr notifications by sending an HTTP
 POST request to a URL. Currently zcommit supports POST-backs from
