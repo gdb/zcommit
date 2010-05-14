@@ -141,7 +141,7 @@ Date:   %(timestamp)s
                 msg = 'Thanks for posting!'
             else:
                 msg = ('If you had sent a POST request to this URL, would have sent'
-                       ' a zepyhr to -c %s' % opts['class'])
+                       ' a zephyr to -c %s' % opts['class'])
             return msg
 
     github = Github()
@@ -158,26 +158,19 @@ Date:   %(timestamp)s
         def _default(self, *args, **query):
             logger.info('A %s request with args: %r and query: %r' %
                         (cherrypy.request.method, args, query))
-            opts = {}
-            if len(args) % 2:
-                raise cherrypy.HTTPError(400, 'Invalid submission URL')
-            logger.debug('Passed validation')
-            for i in xrange(0, len(args), 2):
-                opts[args[i]] = unicode(args[i + 1], 'utf-8', 'replace')
-            logger.debug('Set opts')
-            if 'class' not in opts or 'instance' not in opts:
+            if 'class' not in query or 'instance' not in query:
                 raise cherrypy.HTTPError(400, 'Must specify a zephyr class and instance')
             logger.debug('Specified a class')
             if cherrypy.request.method == 'POST':
                 logger.debug('About to load data')
-                zsig = opts.get('zsig', 'zcommit')
+                zsig = query.get('zsig', 'zcommit')
                 sender = 'daemon.zcommit'
                 logger.debug('Set zsig')
-                zephyr(sender, opts['class'], opts['instance'], zsig, query['payload'])
+                zephyr(sender, query['class'], query['instance'], zsig, query['message'])
                 msg = 'Thanks for posting!'
             else:
                 msg = ('If you had sent a POST request to this URL, would have sent'
-                       ' a zepyhr to -c %s' % opts['class'])
+                       ' a zephyr to -c %s' % query['class'])
             return msg
 
     default = Default()
