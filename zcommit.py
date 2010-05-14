@@ -164,9 +164,10 @@ Date:   %(timestamp)s
             if cherrypy.request.method == 'POST':
                 logger.debug('About to load data')
                 zsig = query.get('zsig', 'zcommit')
+                msg = query.get('message', 'Hello, world!')
                 sender = 'daemon.zcommit'
                 logger.debug('Set zsig')
-                zephyr(sender, query['class'], query['instance'], zsig, query['message'])
+                zephyr(sender, query['class'], query['instance'], zsig, msg)
                 msg = 'Thanks for posting!'
             else:
                 msg = ('If you had sent a POST request to this URL, would have sent'
