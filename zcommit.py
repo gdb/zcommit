@@ -73,12 +73,6 @@ any of the following optional key/value parameters:
 <li> <tt>/zsig/$zsig</tt> (sets the prefix of the zsig; the postfix is always the branch name) </li>
 <li> <tt>/sender/$sender</tt> </li>
 </ul>
-
-<h2> Default </h2>
-
-All parameters are specified in the POST request. <tt>class</tt> and
-<tt>instance</tt> are mandatory; <tt>zsig</tt> and <tt>message</tt>
-are optional.
 """
 
     class Github(object):
@@ -145,36 +139,6 @@ Date:   %(timestamp)s
             return msg
 
     github = Github()
-    
-    class Default(object):
-        @cherrypy.expose
-        def default(self, *args, **query):
-            try:
-                return self._default(*args, **query)
-            except Exception, e:
-                logger.error('Caught exception %s:\n%s' % (e, traceback.format_exc()))
-                raise
-
-        def _default(self, *args, **query):
-            logger.info('A %s request with args: %r and query: %r' %
-                        (cherrypy.request.method, args, query))
-            if 'class' not in query or 'instance' not in query:
-                raise cherrypy.HTTPError(400, 'Must specify a zephyr class and instance')
-            logger.debug('Specified a class')
-            if cherrypy.request.method == 'POST':
-                logger.debug('About to load data')
-                zsig = query.get('zsig', 'zcommit')
-                msg = query.get('message', 'Hello, world!')
-                sender = 'daemon.zcommit'
-                logger.debug('Set zsig')
-                zephyr(sender, query['class'], query['instance'], zsig, msg)
-                msg = 'Thanks for posting!'
-            else:
-                msg = ('If you had sent a POST request to this URL, would have sent'
-                       ' a zephyr to -c %s' % query['class'])
-            return msg
-
-    default = Default()
 
 def main():
     app = cherrypy.tree.mount(Application(), '/zcommit')
